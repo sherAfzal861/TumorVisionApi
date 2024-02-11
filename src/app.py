@@ -1,25 +1,9 @@
-from flask import Flask, request, jsonify 
-from flask_jwt_extended import JWTManager, create_access_token, jwt_required, get_jwt_identity
 from make_prediction import predict, process_image
 from signin import check_password, get_user_by_email
 from signup import add_user
 import emailConfirmation
-from flask_mail import Mail, Message
+from config import app, mail,create_access_token,request,jsonify,Message
 
-app = Flask(__name__)
-app.secret_key = 'eb4daff29821d12d5e0a9bb85566c42b'
-app.config['JWT_SECRET_KEY'] = '09b439697e4c390480d8e81443d261bdf0368b9751f447b1abba7f7c347a7331'
-jwt = JWTManager(app)
-
-# Flask-Mail configuration
-app.config['MAIL_SERVER'] = 'smtp.gmail.com'
-app.config['MAIL_PORT'] = 587
-app.config['MAIL_USE_TLS'] = True
-app.config['MAIL_USE_SSL'] = False
-app.config['MAIL_USERNAME'] = 'sherafzalg666@gmail.com'
-app.config['MAIL_PASSWORD'] = 'wdqz fxxw vmma uxis'
-
-mail = Mail(app)
 OTPS = {}
 
 # Endpoint for uploading an image and making predictions
@@ -27,8 +11,6 @@ OTPS = {}
 def predict_tumor():
     # Assuming the uploaded image is sent as a file in the request
     uploaded_file = request.files['image']
-    print(uploaded_file.content_type)
-    print(uploaded_file.content_type)
 
     # Check if the file is present
     if 'image' not in request.files:
@@ -57,7 +39,7 @@ def signin():
         return jsonify({'error1': 'Invalid credentials'}), 401
 
     # Check if the provided password is correct
-    if not check_password(user[3], password):
+    if not check_password(user.password, password):
         return jsonify({'error2': 'Invalid credentials'}), 401
 
     # Generate an access token for the signed-in user
@@ -99,7 +81,7 @@ def send_otp():
     msg = Message('Verify Your Email - OTP', sender='sherafzalg666@gmail.com', recipients=[email])
     msg.body = f'Your OTP is: {otp}'
     print(OTPS)
-    mail.send(msg)
+    # mail.send(msg)
     
 
     return jsonify({'message':'OTP send to '+email+' successfully'})

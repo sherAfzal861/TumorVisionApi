@@ -5,7 +5,7 @@ import numpy as np
 from PIL import Image
 import matplotlib.pyplot as plt
 # Load the trained model
-model_path = r'./model/accuracy96%'
+model_path = r'D:\BSCS\CS7\FYP\modelcode\TrainedModels\cnnNotTrained\accuracy90%'
 model = keras.models.load_model(model_path)
 
 # Map class indices to class names if available
